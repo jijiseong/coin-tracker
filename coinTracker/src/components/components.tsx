@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Header = styled.header`
+  position: relative;
   margin: 30px;
   height: 10vh;
   display: flex;

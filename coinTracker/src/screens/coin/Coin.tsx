@@ -9,6 +9,9 @@ import { Header, Loader, Title } from "../../components/components";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../../api";
+import Helmet from "react-helmet";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 interface RouteState {
   state: {
@@ -74,12 +77,14 @@ interface ITickersData {
 
 // styled commponents
 const Container = styled.div`
+  padding: 0px 20px;
+  max-width: 480px;
+  margin: 0 auto;
+`;
+const Overview = styled.div`
   display: flex;
   justify-content: space-between;
   background-color: ${(props) => props.theme.bgColor2};
-  max-width: 480px;
-  margin: 10px auto 10px auto;
-
   padding: 10px;
   border-radius: 10px;
 `;
@@ -107,7 +112,7 @@ const Tabs = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   max-width: 480px;
-  margin: 0 auto;
+  margin: 20px auto;
 `;
 
 const Tab = styled.span<{ isActive: boolean }>`
@@ -124,6 +129,17 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
+const Home = styled.span`
+  position: absolute;
+  left: 0;
+
+  font-size: 2em;
+
+  a {
+    color: ${(props) => props.theme.textColor};
+  }
+`;
+
 export default function Coin() {
   const { coinId } = useParams() as { coinId: string };
   const priceMatch = useMatch("/coin/:coinId/price");
@@ -134,7 +150,8 @@ export default function Coin() {
 
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId],
-    () => fetchCoinInfo(coinId)
+    () => fetchCoinInfo(coinId),
+    { refetchInterval: 500 }
   );
   const { isLoading: tickersLoading, data: tickersData } =
     useQuery<ITickersData>(["tickers", coinId], () => fetchCoinTickers(coinId));
@@ -142,15 +159,23 @@ export default function Coin() {
   const loading = infoLoading || tickersLoading;
 
   return (
-    <div>
+    <Container>
+      <Helmet>
+        <title>{coinName}</title>
+      </Helmet>
       <Header>
+        <Home>
+          <Link to="/">
+            <FontAwesomeIcon icon={faHouse} />
+          </Link>
+        </Home>
         <Title>{loading ? <Loader>Loading...</Loader> : coinName}</Title>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Container>
+          <Overview>
             <Item>
               <span>RANK:</span>
               <span>{infoData?.rank}</span>
@@ -160,12 +185,12 @@ export default function Coin() {
               <span>{infoData?.symbol}</span>
             </Item>
             <Item>
-              <span>OPEN SOURCE:</span>
-              <span>{infoData?.open_source ? "YES" : "NO"}</span>
+              <span>PRICE:</span>
+              <span>{tickersData?.quotes.USD.price}</span>
             </Item>
-          </Container>
+          </Overview>
           <Description>{infoData?.description}</Description>
-          <Container>
+          <Overview>
             <Item>
               <span>TOTAL SUPLY:</span>
               <span>{tickersData?.total_supply}</span>
@@ -174,11 +199,10 @@ export default function Coin() {
               <span>MAX SUPLY:</span>
               <span>{tickersData?.max_supply}</span>
             </Item>
-          </Container>
+          </Overview>
         </>
       )}
 
-      <hr />
       {/* Price , Chart screen*/}
       <Tabs>
         <Tab isActive={priceMatch !== null}>
@@ -202,7 +226,7 @@ export default function Coin() {
           </Link>
         </Tab>
       </Tabs>
-      <Outlet></Outlet>
-    </div>
+      <Outlet context={{ coinId: coinId }}></Outlet>
+    </Container>
   );
 }
