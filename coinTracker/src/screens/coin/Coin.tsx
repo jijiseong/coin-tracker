@@ -3,19 +3,21 @@ import {
   Outlet,
   useLocation,
   useMatch,
+  useOutletContext,
   useParams,
 } from "react-router-dom";
 import { Header, Loader, Title } from "../../components/components";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../../api";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 interface RouteState {
   state: {
     coinName: string;
+    toggleDark?: () => void;
   };
 }
 
@@ -132,7 +134,6 @@ const Tab = styled.span<{ isActive: boolean }>`
 const Home = styled.span`
   position: absolute;
   left: 0;
-
   font-size: 2em;
 
   a {
@@ -144,6 +145,8 @@ export default function Coin() {
   const { coinId } = useParams() as { coinId: string };
   const priceMatch = useMatch("/coin/:coinId/price");
   const chartMatch = useMatch("/coin/:coinId/chart");
+  const { toggleDark } = useOutletContext<{ toggleDark: () => void }>();
+
   const {
     state: { coinName },
   } = useLocation() as RouteState;
@@ -151,7 +154,7 @@ export default function Coin() {
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId],
     () => fetchCoinInfo(coinId),
-    { refetchInterval: 500 }
+    { refetchInterval: 5000 }
   );
   const { isLoading: tickersLoading, data: tickersData } =
     useQuery<ITickersData>(["tickers", coinId], () => fetchCoinTickers(coinId));
@@ -170,6 +173,7 @@ export default function Coin() {
           </Link>
         </Home>
         <Title>{loading ? <Loader>Loading...</Loader> : coinName}</Title>
+        <button onClick={toggleDark}>light/dark</button>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

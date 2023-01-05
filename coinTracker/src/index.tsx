@@ -2,10 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
 import router from "./Router";
-import { theme } from "./theme";
 import Root from "./Root";
+import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient();
 
@@ -15,11 +14,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <Root />
-      </ThemeProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );

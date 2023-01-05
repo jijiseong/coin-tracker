@@ -1,6 +1,6 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { Header, Loader, Title } from "../components/components";
@@ -51,6 +51,7 @@ interface CoinInterface {
 
 export default function Coins() {
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
+  const { toggleDark } = useOutletContext<{ toggleDark: () => void }>();
 
   return (
     <Container>
@@ -59,6 +60,7 @@ export default function Coins() {
       </Helmet>
       <Header>
         <Title>Coin</Title>
+        <button onClick={toggleDark}>light/dark</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
