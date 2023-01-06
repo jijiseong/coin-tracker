@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import Root from "./Root";
 import { HelmetProvider } from "react-helmet-async";
+import { RecoilRoot } from "recoil";
 
 const queryClient = new QueryClient();
 
@@ -15,10 +16,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Root />
-      </QueryClientProvider>
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <Root />
+        </QueryClientProvider>
+      </RecoilRoot>
     </HelmetProvider>
   </React.StrictMode>
 );

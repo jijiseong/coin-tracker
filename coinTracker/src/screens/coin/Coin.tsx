@@ -3,21 +3,18 @@ import {
   Outlet,
   useLocation,
   useMatch,
-  useOutletContext,
   useParams,
 } from "react-router-dom";
-import { Header, Loader, Title } from "../../components/components";
+import { Loader, Title } from "../../components/components";
+import Header from "../../components/Header";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../../api";
 import { Helmet } from "react-helmet-async";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 interface RouteState {
   state: {
     coinName: string;
-    toggleDark?: () => void;
   };
 }
 
@@ -131,21 +128,10 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-const Home = styled.span`
-  position: absolute;
-  left: 0;
-  font-size: 2em;
-
-  a {
-    color: ${(props) => props.theme.textColor};
-  }
-`;
-
 export default function Coin() {
   const { coinId } = useParams() as { coinId: string };
   const priceMatch = useMatch("/coin/:coinId/price");
   const chartMatch = useMatch("/coin/:coinId/chart");
-  const { toggleDark } = useOutletContext<{ toggleDark: () => void }>();
 
   const {
     state: { coinName },
@@ -167,14 +153,9 @@ export default function Coin() {
         <title>{coinName}</title>
       </Helmet>
       <Header>
-        <Home>
-          <Link to="/">
-            <FontAwesomeIcon icon={faHouse} />
-          </Link>
-        </Home>
         <Title>{loading ? <Loader>Loading...</Loader> : coinName}</Title>
-        <button onClick={toggleDark}>light/dark</button>
       </Header>
+      {/* Coin Information */}
       {loading ? (
         <Loader>Loading...</Loader>
       ) : (
@@ -207,7 +188,7 @@ export default function Coin() {
         </>
       )}
 
-      {/* Price , Chart screen*/}
+      {/* Price , Chart Button*/}
       <Tabs>
         <Tab isActive={priceMatch !== null}>
           <Link
@@ -230,7 +211,9 @@ export default function Coin() {
           </Link>
         </Tab>
       </Tabs>
-      <Outlet context={{ coinId: coinId }}></Outlet>
+
+      {/* Price , Chart Screen*/}
+      <Outlet context={{ coinId }}></Outlet>
     </Container>
   );
 }
