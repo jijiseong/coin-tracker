@@ -5,7 +5,7 @@ import Coins from "./screens/Coins";
 import Coin from "./screens/coin/Coin";
 import Price from "./screens/coin/Price";
 import Chart from "./screens/coin/Chart";
-// import NotFound from "./screens/NotFound";
+import NotFound from "./screens/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         ],
       },
     ],
-    // errorElement: <NotFound />,
+    errorElement: <NotFound />,
   },
 ]);
 
