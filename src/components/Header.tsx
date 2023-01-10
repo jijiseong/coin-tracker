@@ -37,7 +37,7 @@ export default function Header({ children }: { children: ReactNode }) {
   return (
     <Cotainer>
       <Home>
-        <Link to="/">
+        <Link to="/coin-tracker">
           <FontAwesomeIcon icon={faHouse} />
         </Link>
       </Home>

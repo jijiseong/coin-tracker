@@ -9,7 +9,7 @@ import NotFound from "./screens/NotFound";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "coin-tracker/",
     element: <Root />,
     children: [
       {
@@ -28,6 +28,7 @@ const router = createBrowserRouter([
           {
             path: "chart",
             element: <Chart />,
+            errorElement: <ErrComponent />,
           },
         ],
       },

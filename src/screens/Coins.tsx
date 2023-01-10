@@ -69,7 +69,7 @@ export default function Coins() {
             <Coin key={coin.id}>
               <Link
                 to={{
-                  pathname: `/coin/${coin.id}`,
+                  pathname: `/coin-tracker/coin/${coin.id}`,
                 }}
                 state={{ coinName: coin.name }}
               >
